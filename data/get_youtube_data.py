@@ -1,10 +1,14 @@
+import re
+
+import requests
+from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 
 # TODO: test if no transcript available
 
 
-def fetch_transcript(youtube_link):
-    video_id = youtube_link.split("v=")[-1]
+def get_transcript(youtube_url):
+    video_id = youtube_url.split("v=")[-1]
     transcript = None
     try:
         transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
@@ -21,3 +25,18 @@ def fetch_transcript(youtube_link):
         return {"transcript": transcript, "is_auto_generated": True}
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def get_chapters(youtube_url):
+    soup = BeautifulSoup(requests.get(youtube_url).content, features="lxml")
+    pattern = re.compile('(?<=shortDescription":").*(?=","isCrawlable)')
+    description = pattern.findall(str(soup))[0].replace('\\n','\n')
+    return extract_chapters(description)
+
+def extract_chapters(description):
+    chapter_pattern = r"(\d{1,2}:\d{2}(?::\d{2})?)\s+(.*)"
+    matches = re.findall(chapter_pattern, description)
+
+    chapters = []
+    for match in matches:
+        chapters.append(' '.join(match))
+    return chapters
