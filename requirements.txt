@@ -1,5 +1,6 @@
 # Data
 youtube_transcript_api
+google-api-python-client
 
 # Default
 hyperopt==0.2.7

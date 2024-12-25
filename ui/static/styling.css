@@ -1,0 +1,132 @@
+/* General styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2e;
+    color: #d1d5db;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Main container */
+.chat-container {
+    width: 100%;
+    max-width: 800px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #2a2b3c;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Title bar */
+.title-bar {
+    background-color: #20222f;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+}
+
+.title-bar h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+/* Chat box */
+.chat-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #1e1e2e;
+    scrollbar-width: thin;
+}
+
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 4px;
+}
+
+/* Messages */
+.message {
+    padding: 12px 16px;
+    border-radius: 16px;
+    max-width: 75%;
+    font-size: 1rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+.message.user {
+    background-color: #0ea5e9;
+    color: #ffffff;
+    align-self: flex-end;
+}
+
+.message.ai {
+    background-color: #333348;
+    color: #ffffff;
+    align-self: flex-start;
+}
+
+.message.error {
+    background-color: #ef4444;
+    color: #ffffff;
+    align-self: flex-start;
+}
+
+/* Input area */
+.input-area {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #20222f;
+    border-top: 1px solid #444;
+}
+
+.input-area input {
+    flex: 1;
+    border: none;
+    background-color: #1e1e2e;
+    color: #d1d5db;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.input-area input::placeholder {
+    color: #6b7280;
+}
+
+.input-area button {
+    background-color: #0ea5e9;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.input-area button:hover {
+    background-color: #0284c7;
+}
+
+.input-area button:active {
+    background-color: #0369a1;
+}

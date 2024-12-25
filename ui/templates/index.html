@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script>
+        async function sendRequest() {
+            const youtubeUrl = document.getElementById("youtubeUrl").value;
+
+            if (!youtubeUrl) {
+                alert("Please enter a YouTube URL");
+                return;
+            }
+
+            const response = await fetch('/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ youtube_url: youtubeUrl })
+            });
+
+            const data = await response.json();
+
+            const chatBox = document.getElementById("chatBox");
+
+            // Add the user input
+            const userMessage = document.createElement("div");
+            userMessage.className = "message user";
+            userMessage.innerText = youtubeUrl;
+            chatBox.appendChild(userMessage);
+
+            if (response.ok) {
+                // Add the AI response
+                const aiMessage = document.createElement("div");
+                aiMessage.className = "message ai";
+                aiMessage.innerText = data.response;
+                chatBox.appendChild(aiMessage);
+            } else {
+                // Handle error
+                const errorMessage = document.createElement("div");
+                errorMessage.className = "message error";
+                errorMessage.innerText = data.error;
+                chatBox.appendChild(errorMessage);
+            }
+
+            // Scroll to the bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Clear the input field
+            document.getElementById("youtubeUrl").value = "";
+        }
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <h1>AI Assistant</h1>
+        </div>
+
+        <!-- Chat Box -->
+        <div id="chatBox" class="chat-box">
+            <!-- Chat messages will be dynamically added here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input type="text" id="youtubeUrl" placeholder="Send a message...">
+            <button onclick="sendRequest()">Send</button>
+        </div>
+    </div>
+</body>
+</html>
