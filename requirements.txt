@@ -57,6 +57,5 @@ uvicorn[standard]
 PyYAML
 jinja2
 tiktoken
-pydantic>=2
 Pillow
 replicate
