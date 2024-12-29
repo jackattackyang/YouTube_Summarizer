@@ -5,6 +5,7 @@ google-api-python-client
 # Default
 python-dotenv==1.0.0
 transformers==4.28.1
+huggingface_hub==0.26.5
 
 # Notebook
 jupyterlab==3.6.3
