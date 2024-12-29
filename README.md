@@ -1,13 +1,12 @@
-# YouTube Video Summarizer
+# YouTube Video Summarizer + Q&A
 
-An AI-powered application that summarizes YouTube videos and provides an interactive Q&A interface using the video's content. The project uses LLaMA 3 for generating summaries and answering questions, with a FastAPI backend and Streamlit frontend.
+Application that summarizes YouTube videos and provides Retrieval Augmented Question and Answering using the video transcript and metadata. LLaMA 3.2 via Replicate API generates summaries and answers questions, with a FastAPI backend and Streamlit frontend.
 
 ## Features
 
 - **Video Summarization**: Generate concise summaries of YouTube videos
-- **Interactive Q&A**: Ask questions about the video content
-- **Session Management**: Maintains conversation history for contextual responses
-- **Modern UI**: Clean and intuitive Streamlit interface
+- **Interactive Q&A**: Simple RAG architecture used to answer questions relevant to the video content, with FAISS vector embedding matching
+- **Deployment**: Backend deployed using Heroku, frontend hosted on Streamlit
 
 ## Architecture
 
@@ -19,10 +18,28 @@ An AI-powered application that summarizes YouTube videos and provides an interac
 - Manages user sessions and conversation history
 
 ### Frontend (Streamlit)
-- Simple and intuitive user interface
-- Real-time interaction with the backend
+- Simple user interface
 - Displays video summaries and Q&A responses
-- Maintains chat history
+
+## Project Structure
+
+```
+youtube_summarizer/
+├── api/
+│   ├── app.py              # FastAPI backend
+│   └── replicate_api.py    # LLaMA API
+├── data/
+│   ├── get_youtube_data.py # YouTube data fetching
+│   └── preprocess.py       # Data preprocessing
+├── ui/
+│   └── streamlit_qa.py     # Streamlit frontend
+├── src/
+│   ├── vectorstore.py      # FAISS vector store for RAG
+│   └── chat.py             # Chat functionality
+├── requirements.txt
+├── docker-compose.yml
+└── Dockerfile
+```
 
 ## Prerequisites
 
@@ -30,6 +47,14 @@ An AI-powered application that summarizes YouTube videos and provides an interac
 - YouTube Data API key
 - Replicate API token
 - Heroku account for deployment (if deploying with Heroku)
+
+
+## Environment Variables
+
+- `YOUTUBE_API_KEY`: Required for fetching video metadata
+- `REPLICATE_API_TOKEN`: Required for LLaMA model access
+- `BACKEND_URL`: Optional, links to deployed backend server
+- `PORT`: Optional, defaults to 5001 for the backend server
 
 ## Setup
 
@@ -122,41 +147,3 @@ The project includes Docker support for deploying the backend service locally:
 docker-compose up
 ```
 This will start the FastAPI backend service at http://localhost:5001
-
-## Project Structure
-
-```
-youtube_summarizer/
-├── api/
-│   ├── app.py              # FastAPI backend
-│   └── replicate_api.py    # LLaMA API
-├── data/
-│   ├── get_youtube_data.py # YouTube data fetching
-│   └── preprocess.py       # Data preprocessing
-├── ui/
-│   └── streamlit_qa.py     # Streamlit frontend
-├── src/
-│   ├── vectorstore.py      # FAISS vector store for RAG
-│   └── chat.py             # Chat functionality
-├── requirements.txt
-├── docker-compose.yml
-└── Dockerfile
-```
-
-## Environment Variables
-
-- `YOUTUBE_API_KEY`: Required for fetching video metadata
-- `REPLICATE_API_TOKEN`: Required for LLaMA model access
-- `PORT`: Optional, defaults to 5001 for the backend server
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-[Add your license information here]
