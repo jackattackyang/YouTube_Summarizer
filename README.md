@@ -3,6 +3,7 @@
 [App](https://my-youtube-summarizer.streamlit.app/) that summarizes YouTube videos and provides Retrieval Augmented Question and Answering using the video transcript and metadata. LLaMA 3.2 via Replicate API generates summaries and answers questions, with a FastAPI backend and Streamlit frontend.
 
 Sample video from one of my favourite podcasts: MorningBrewDaily
+
 [<img src="https://img.youtube.com/vi/QlUcyaXiXPE/0.jpg" width="300" height="200">](https://www.youtube.com/watch?v=QlUcyaXiXPE)
 
 Demo:
