@@ -29,6 +29,7 @@ An AI-powered application that summarizes YouTube videos and provides an interac
 - Python 3.10+
 - YouTube Data API key
 - Replicate API token
+- Heroku account for deployment (if deploying with Heroku)
 
 ## Setup
 
@@ -55,7 +56,52 @@ YOUTUBE_API_KEY=your_youtube_api_key
 REPLICATE_API_TOKEN=your_replicate_api_token
 ```
 
-## Running Locally
+## Deployment
+
+### Backend Deployment (Heroku)
+
+1. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and login:
+```bash
+heroku login
+```
+
+2. Create a new Heroku app:
+```bash
+heroku create your-app-name
+```
+
+3. Set the environment variables in Heroku:
+```bash
+heroku config:set YOUTUBE_API_KEY=your_youtube_api_key
+heroku config:set REPLICATE_API_TOKEN=your_replicate_api_token
+```
+
+4. Deploy to Heroku:
+```bash
+git push heroku main
+```
+
+The backend API will be available at `https://your-app-name.herokuapp.com`
+
+### Frontend Deployment (Streamlit Cloud)
+
+1. Push your code to a GitHub repository
+
+2. Go to [Streamlit Cloud](https://streamlit.io/cloud)
+
+3. Click "New app" and select your repository
+
+4. Set the following:
+   - Main file path: `ui/streamlit_qa.py`
+   - Python version: 3.10
+   - Add the following secrets in the Streamlit Cloud dashboard:
+     - BACKEND_URL: Your Heroku backend URL (e.g., https://your-app-name.herokuapp.com)
+
+The frontend will be available at your Streamlit Cloud URL.
+
+## Local Development
+
+### Running Locally
 
 1. Start the FastAPI backend:
 ```bash
@@ -69,15 +115,13 @@ streamlit run ui/streamlit_qa.py
 ```
 The UI will be available at `http://localhost:8501`
 
-## Docker Deployment
-
-The project includes Docker support for easy deployment:
+### Local Docker Deployment
+The project includes Docker support for deploying the backend service locally:
 
 ```bash
 docker-compose up
 ```
-
-This will start both the backend and frontend services.
+This will start the FastAPI backend service at http://localhost:5001
 
 ## Project Structure
 
@@ -85,15 +129,15 @@ This will start both the backend and frontend services.
 youtube_summarizer/
 ├── api/
 │   ├── app.py              # FastAPI backend
-│   └── replicate_api.py    # LLaMA integration
+│   └── replicate_api.py    # LLaMA API
 ├── data/
 │   ├── get_youtube_data.py # YouTube data fetching
 │   └── preprocess.py       # Data preprocessing
 ├── ui/
 │   └── streamlit_qa.py     # Streamlit frontend
 ├── src/
-│   ├── vectorstore.py      # Vector storage for RAG
-│   └── chat.py            # Chat functionality
+│   ├── vectorstore.py      # FAISS vector store for RAG
+│   └── chat.py             # Chat functionality
 ├── requirements.txt
 ├── docker-compose.yml
 └── Dockerfile

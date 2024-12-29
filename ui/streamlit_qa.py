@@ -1,7 +1,8 @@
+import os
 import streamlit as st
 import requests
 
-BACKEND_URL = "http://127.0.0.1:5001"
+BACKEND_URL = os.get("BACKEND_URL", "http://127.0.0.1:5001")
 
 
 def initialize_session():
