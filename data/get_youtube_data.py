@@ -65,7 +65,25 @@ class YouTubeDataFetcher:
     def get_transcript(self, video_id: str) -> Optional[Transcript]:
         transcript = None
         try:
-            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            environment = os.getenv("ENVIRONMENT", "local")
+            print(f"Running in environment: {environment}")
+            if environment == "local":
+                transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            else:
+                proxy_list = os.getenv("PROXY_LIST")
+                for proxy_string in proxy_list.split(","):
+                    ip_port, username, password = proxy_string.rsplit(":", 2)
+                    proxy_url = f"socks5://{username}:{password}@{ip_port}"
+                    proxies = {"http": proxy_url, "https": proxy_url}
+                    try:
+                        transcript_list = YouTubeTranscriptApi.list_transcripts(
+                            video_id, proxies=proxies
+                        )
+                        break
+                    except Exception as e:
+                        logger.error("Proxy failed")
+                        continue
+
             for transcript in transcript_list:
                 logger.info(f"Language: {transcript.language}")
                 logger.info(f"Language: {transcript.language_code}")
