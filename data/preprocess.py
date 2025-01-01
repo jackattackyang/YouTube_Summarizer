@@ -197,3 +197,24 @@ Inputs:"""
         prompt.append("")
 
     return "\n".join(prompt)
+
+
+def get_video_info(meta_data, chapter_transcript):
+    prompt = ""
+    prompt.append(f"Title: {meta_data.title}")
+    prompt.append(f"Channel Name: {meta_data.channel_name}")
+    prompt.append(
+        f"Transcript is auto-generated: {meta_data.transcript['is_auto_generated']}"
+    )
+    prompt.append("")
+
+    for chapter in chapter_transcript:
+        prompt.append(f"(Timestamp: {chapter.timestamp}) {chapter.chapter}")
+        prompt.append("Transcript:")
+        transcript = []
+        for line in chapter.transcript:
+            transcript.append(f"{line}")
+        prompt.append(" ".join(transcript))
+        prompt.append("")
+
+    return "\n".join(prompt)

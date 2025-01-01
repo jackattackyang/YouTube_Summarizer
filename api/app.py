@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime, timedelta
 
 from data.get_youtube_data import YouTubeDataFetcher
-from data.preprocess import merge_chapter_transcript, get_prompt
+from data.preprocess import merge_chapter_transcript, get_prompt, get_video_info
 from api.replicate_api import llama3_8b
 from src.vectorstore import get_retriever
 from src.chat import chat, get_chat_chain
@@ -66,17 +66,11 @@ session_manager = SessionManager()
 
 class YouTubeRequest(BaseModel):
     youtube_url: HttpUrl
-    session_id: str = Field(
-        ...,
-        description="Session ID for the current user session"
-    )
+    session_id: str = Field(..., description="Session ID for the current user session")
 
 
 class QuestionRequest(BaseModel):
-    session_id: str = Field(
-        ...,
-        description="Session ID for the current user session"
-    )
+    session_id: str = Field(..., description="Session ID for the current user session")
     user_question: str
 
 
@@ -89,6 +83,11 @@ class SummaryResponse(BaseModel):
 class QAResponse(BaseModel):
     response: str
     youtube_url: str  # Include the YouTube URL for context
+
+
+class VideoInfo(BaseModel):
+    response: str
+    youtube_url: str
 
 
 @asynccontextmanager
@@ -129,8 +128,7 @@ async def create_session():
 
 @app.post("/summarize", response_model=SummaryResponse)
 async def summarize(
-    request: YouTubeRequest,
-    youtube: YouTubeDataFetcher = Depends(get_youtube_client)
+    request: YouTubeRequest, youtube: YouTubeDataFetcher = Depends(get_youtube_client)
 ):
     try:
         meta_data = youtube.get_meta_data(str(request.youtube_url))
@@ -140,7 +138,7 @@ async def summarize(
 
         retriever = get_retriever(meta_data, chapter_transcript)
         chat_chain = get_chat_chain(retriever)
-        
+
         session_manager.set_session(
             request.session_id,
             {
@@ -155,7 +153,7 @@ async def summarize(
         return SummaryResponse(
             response=response,
             session_id=request.session_id,
-            youtube_url=str(request.youtube_url)
+            youtube_url=str(request.youtube_url),
         )
 
     except Exception as e:
@@ -168,22 +166,36 @@ async def question_answer(request: QuestionRequest):
     if not session_data or not session_data.get("chat_chain"):
         raise HTTPException(
             status_code=400,
-            detail="Please summarize a YouTube video first for this session"
+            detail="Please summarize a YouTube video first for this session",
         )
 
     try:
         chat_chain = session_data["chat_chain"]
         chat_history = session_manager.get_chat_history(request.session_id)
-        
+
         response, updated_history = chat(
             request.user_question, chat_chain, chat_history
         )
-        
+
         session_manager.set_chat_history(request.session_id, updated_history)
         return QAResponse(
-            response=response["answer"],
-            youtube_url=session_data["youtube_url"]
+            response=response["answer"], youtube_url=session_data["youtube_url"]
         )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/video_info", response_model=VideoInfo)
+async def video_info(
+    request: YouTubeRequest, youtube: YouTubeDataFetcher = Depends(get_youtube_client)
+):
+    try:
+        meta_data = youtube.get_meta_data(str(request.youtube_url))
+        chapter_transcript = merge_chapter_transcript(meta_data)
+        response = get_video_info(meta_data, chapter_transcript)
+
+        return VideoInfo(response=response, youtube_url=str(request.youtube_url))
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
