@@ -86,7 +86,7 @@ class QAResponse(BaseModel):
 
 
 class VideoInfo(BaseModel):
-    response: str
+    video_info: str
     youtube_url: str
 
 
@@ -195,7 +195,7 @@ async def video_info(
         chapter_transcript = merge_chapter_transcript(meta_data)
         response = get_video_info(meta_data, chapter_transcript)
 
-        return VideoInfo(response=str(response), youtube_url=youtube_url)
+        return VideoInfo(video_info=str(response), youtube_url=youtube_url)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
