@@ -200,7 +200,7 @@ Inputs:"""
 
 
 def get_video_info(meta_data, chapter_transcript):
-    prompt = ""
+    prompt = []
     prompt.append(f"Title: {meta_data.title}")
     prompt.append(f"Channel Name: {meta_data.channel_name}")
     prompt.append(

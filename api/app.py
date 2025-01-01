@@ -188,14 +188,14 @@ async def question_answer(request: QuestionRequest):
 
 @app.get("/video_info", response_model=VideoInfo)
 async def video_info(
-    request: YouTubeRequest, youtube: YouTubeDataFetcher = Depends(get_youtube_client)
+    youtube_url: str, youtube: YouTubeDataFetcher = Depends(get_youtube_client)
 ):
     try:
-        meta_data = youtube.get_meta_data(str(request.youtube_url))
+        meta_data = youtube.get_meta_data(youtube_url)
         chapter_transcript = merge_chapter_transcript(meta_data)
         response = get_video_info(meta_data, chapter_transcript)
 
-        return VideoInfo(response=response, youtube_url=str(request.youtube_url))
+        return VideoInfo(response=str(response), youtube_url=youtube_url)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
