@@ -1,6 +1,10 @@
 # YouTube Video Summarizer + Q&A
 
-[App](https://my-youtube-summarizer.streamlit.app/) that summarizes YouTube videos and provides Retrieval Augmented Question and Answering using the video transcript and metadata. LLaMA 3.2 via Replicate API generates summaries and answers questions, with a FastAPI backend and Streamlit frontend.
+A YouTube video summary tool with two interfaces:
+- [Streamlit App](https://my-youtube-summarizer.streamlit.app/): Interactive web interface that summarizes and provides Q&A with LLaMA 3.2 via Replicate API
+- [CustomGPT](https://chatgpt.com/g/g-677692651cd88191bd497d068d804dc0-youtube-q-a): ChatGPT interface using GPT-4
+
+Both interfaces share the same FastAPI backend hosted on Heroku for video transcript processing and data logic.
 
 Sample video from one of my favourite podcasts: MorningBrewDaily
 
@@ -9,26 +13,38 @@ Sample video from one of my favourite podcasts: MorningBrewDaily
 Demo:
 ![Alt Text](images/demo.gif)
 
-
+Comparison:
+Custom GPT (GPT-4o)            |  Streamlit App (Llama 3.2 7B)
+:-------------------------:|:-------------------------:
+![](images/custom_gpt.png)  |  ![](images/streamlit_app.png)
 
 ## Features
 
 - **Video Summarization**: Generate concise summaries of YouTube videos
-- **Interactive Q&A**: Simple RAG architecture used to answer questions relevant to the video content, with FAISS vector embedding matching
-- **Deployment**: Backend deployed using Heroku, frontend hosted on Streamlit
+- **Interactive Q&A**: Simple RAG architecture used to answer questions about video content
+- **Dual Interfaces**: 
+  - Streamlit web app powered by LLaMA 3.2 for summarization and Q&A
+  - CustomGPT powered by GPT-4 for conversational interaction
+- **Unified Backend**: Shared FastAPI backend handles video data retrieval for both interfaces
 
 ## Architecture
 
 ### Backend (FastAPI)
 - Fetches YouTube video metadata and transcripts
 - Processes and chunks video content
-- Integrates with LLaMA 3 via Replicate API
-- Implements RAG (Retrieval Augmented Generation) for accurate responses
+- Exposes endpoints for both Streamlit and CustomGPT interfaces
+- Calls LLaMA 3.2 via Replicate API
+- Implements RAG (Retrieval Augmented Generation) with FAISS vector matching
 - Manages user sessions and conversation history
 
-### Frontend (Streamlit)
-- Simple user interface
+### Frontend Options
+
+#### Streamlit Web App
 - Displays video summaries and Q&A responses
+
+#### CustomGPT Interface
+- Uses ChatGPT 4o
+- Uses OpenAPI specification (`openai_api.yaml`) to interact with backend
 
 ## Project Structure
 
@@ -36,6 +52,7 @@ Demo:
 youtube_summarizer/
 ├── api/
 │   ├── app.py              # FastAPI backend
+│   ├── openai_api.yaml     # OpenAPI spec for CustomGPT integration
 │   └── replicate_api.py    # LLaMA API
 ├── data/
 │   ├── get_youtube_data.py # YouTube data fetching

@@ -1,0 +1,50 @@
+
+openapi: 3.1.0
+info:
+  title: YouTube Transcript
+  description: Access to transcript and meta-data of a YouTube video
+  version: 1.0.0
+servers:
+  - url: https://youtube-summarizer-backend-7b8962dfa5ed.herokuapp.com
+    description: Main API Server
+paths:
+  /create_session:
+    post:
+      operationId: getSessionId
+      summary: Get ID for a new session
+      responses:
+        '200':
+          description: Successfully retrieved session ID endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_id:
+                    type: string
+                    format: uri
+  /video_info:
+    get:
+      operationId: getVideoInfo
+      summary: Get title, channel and transcript for the YouTube video
+      parameters:
+        - name: youtube_url
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+          description: URL of the YouTube video
+      responses:
+        '200':
+          description: Successfully retrieved YouTubeTranscript endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  video_info:
+                    type: string
+                    format: uri
+                
+
