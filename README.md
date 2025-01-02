@@ -2,7 +2,7 @@
 
 A YouTube video summary tool with two interfaces:
 - [Streamlit App](https://my-youtube-summarizer.streamlit.app/): Interactive web interface that summarizes and provides Q&A with LLaMA 3.2 via Replicate API
-- [CustomGPT](https://chatgpt.com/g/g-677692651cd88191bd497d068d804dc0-youtube-q-a): ChatGPT interface using GPT-4
+- [YouTube Q&A GPT](https://chatgpt.com/g/g-677692651cd88191bd497d068d804dc0-youtube-q-a): ChatGPT interface using GPT-4
 
 Both interfaces share the same FastAPI backend hosted on Heroku for video transcript processing and data logic.
 
@@ -52,7 +52,7 @@ Custom GPT (GPT-4o)            |  Streamlit App (Llama 3.2 7B)
 youtube_summarizer/
 ├── api/
 │   ├── app.py              # FastAPI backend
-│   ├── openai_api.yaml     # OpenAPI spec for CustomGPT integration
+│   ├── openai_api.yaml     # OpenAPI spec for CustomGPT
 │   └── replicate_api.py    # LLaMA API
 ├── data/
 │   ├── get_youtube_data.py # YouTube data fetching
